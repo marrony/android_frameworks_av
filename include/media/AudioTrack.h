@@ -270,10 +270,13 @@ public:
      * This includes the latency due to AudioTrack buffer size, AudioMixer (if any)
      * and audio hardware driver.
      */
+            uint32_t    latency() const;
+#if 0
 #ifdef QCOM_DIRECTTRACK
             uint32_t    latency() const;
 #else
             uint32_t    latency() const     { return mLatency; }
+#endif
 #endif
 
     /* getters, see constructors and set() */

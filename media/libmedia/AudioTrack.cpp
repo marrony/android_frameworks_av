@@ -105,6 +105,31 @@ AudioTrack::AudioTrack()
 {
 }
 
+extern "C" status_t _ZNK7android10AudioTrack9initCheckEv(AudioTrack* audioTrack) {
+   return 0;
+}
+
+extern "C" void _ZN7android10AudioTrackC1EijiiijPFviPvS1_ES1_ii(AudioTrack* audioTrack,
+            int streamType,
+            uint32_t sampleRate,
+            int format,
+            int channels,
+            int frameCount,
+            uint32_t flags,
+            AudioTrack::callback_t cbf,
+            void* user,
+            int notificationFrames,
+            int sessionId) {
+
+     audio_stream_type_t t = (audio_stream_type_t)streamType;
+     audio_format_t f = (audio_format_t)format;
+     audio_channel_mask_t m = (audio_channel_mask_t)channels;
+     audio_output_flags_t fs = (audio_output_flags_t)flags;
+
+     new(audioTrack) AudioTrack(t, sampleRate, f, m, frameCount, fs, cbf, user, notificationFrames, sessionId, AudioTrack::TRANSFER_DEFAULT, NULL, 0);
+}
+
+
 AudioTrack::AudioTrack(
         audio_stream_type_t streamType,
         uint32_t sampleRate,
@@ -166,6 +191,7 @@ AudioTrack::AudioTrack(
             0 /*frameCount*/, flags, cbf, user, notificationFrames,
             sharedBuffer, false /*threadCanCallJava*/, sessionId, transferType, offloadInfo, uid);
 }
+
 
 AudioTrack::~AudioTrack()
 {
@@ -558,6 +584,10 @@ uint32_t AudioTrack::latency() const
         ALOGV("latency() mLatency = %d, newLatency = %d", mLatency, newLatency);
         return newLatency;
     }
+    return mLatency;
+}
+#else
+uint32_t AudioTrack::latency() const {
     return mLatency;
 }
 #endif

@@ -214,6 +214,10 @@ int AudioSystem::logToLinear(float volume)
     return volume ? 100 - int(dBConvertInverse * log(volume) + 0.5) : 0;
 }
 
+extern "C" status_t _ZN7android11AudioSystem21getOutputSamplingRateEPii(AudioSystem* audioSystem, uint32_t* samplingRate, audio_stream_type_t streamType) {
+    return audioSystem->getOutputSamplingRate(samplingRate, streamType);
+}
+
 status_t AudioSystem::getOutputSamplingRate(uint32_t* samplingRate, audio_stream_type_t streamType)
 {
     audio_io_handle_t output;
@@ -256,6 +260,10 @@ status_t AudioSystem::getSamplingRate(audio_io_handle_t output,
     return NO_ERROR;
 }
 
+extern "C" status_t _ZN7android11AudioSystem19getOutputFrameCountEPii(AudioSystem* audioSystem, size_t* frameCount, audio_stream_type_t streamType) {
+    return audioSystem->getOutputFrameCount(frameCount, streamType);
+}
+
 status_t AudioSystem::getOutputFrameCount(size_t* frameCount, audio_stream_type_t streamType)
 {
     audio_io_handle_t output;
@@ -294,6 +302,10 @@ status_t AudioSystem::getFrameCount(audio_io_handle_t output,
             *frameCount);
 
     return NO_ERROR;
+}
+
+extern "C" status_t _ZN7android11AudioSystem16getOutputLatencyEPji(AudioSystem* audioSystem, uint32_t* latency, int streamType) {
+    return audioSystem->getOutputLatency(latency, (audio_stream_type_t)streamType);
 }
 
 status_t AudioSystem::getOutputLatency(uint32_t* latency, audio_stream_type_t streamType)
